@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+import 'package:pomodoro_timer/timer_screen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -17,6 +20,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
@@ -24,7 +28,6 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -43,17 +46,15 @@ class WelcomeScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 40),
 
-                // ---------- CENTER CONTENT ----------
                 Column(
                   children: [
-                    // Focus Ring
                     Container(
                       width: 180,
                       height: 180,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: const Color(0xFF4FD1C5),
+                          color: Color(0xFF4FD1C5),
                           width: 4,
                         ),
                       ),
@@ -79,10 +80,7 @@ class WelcomeScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 40),
-
-                    // App Name
                     const Text(
                       "Focusly",
                       style: TextStyle(
@@ -91,23 +89,18 @@ class WelcomeScreen extends StatelessWidget {
                         color: Color(0xFFECEFF1),
                       ),
                     ),
-
                     const SizedBox(height: 12),
-
-                    // Tagline
                     const Text(
                       "Train your attention.\nOne session at a time.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 15,
                         color: Color(0xFF9AA5B1),
-                        height: 1.4,
                       ),
                     ),
                   ],
                 ),
 
-                // ---------- BOTTOM BUTTONS ----------
                 Column(
                   children: [
                     SizedBox(
@@ -122,7 +115,12 @@ class WelcomeScreen extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          // TODO: Navigate to Timer Screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const TimerScreen(),
+                            ),
+                          );
                         },
                         child: const Text(
                           "Start Focusing",
@@ -133,12 +131,15 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 12),
-
                     TextButton(
                       onPressed: () {
-                        // TODO: Skip action
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const TimerScreen(),
+                          ),
+                        );
                       },
                       child: const Text(
                         "Skip for now",
@@ -147,7 +148,6 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -159,3 +159,5 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 }
+
+
