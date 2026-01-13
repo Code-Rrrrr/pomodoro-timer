@@ -1,163 +1,176 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
-import 'package:pomodoro_timer/timer_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const PomodoroApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class PomodoroApp extends StatelessWidget {
+  const PomodoroApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WelcomeScreen(),
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFF0F172A),
+        fontFamily: 'Poppins',
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF22C55E),
+          secondary: Color(0xFF38BDF8),
+        ),
+      ),
+      home: const PomodoroHome(),
     );
   }
 }
 
+class PomodoroHome extends StatefulWidget {
+  const PomodoroHome({super.key});
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+  @override
+  State<PomodoroHome> createState() => _PomodoroHomeState();
+}
+
+class _PomodoroHomeState extends State<PomodoroHome> {
+  static const int workDuration = 25 * 60;
+  int remainingSeconds = workDuration;
+  Timer? timer;
+  bool isRunning = false;
+
+  void startTimer() {
+    if (timer != null) return;
+
+    setState(() => isRunning = true);
+
+    timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (remainingSeconds == 0) {
+        stopTimer();
+      } else {
+        setState(() => remainingSeconds--);
+      }
+    });
+  }
+
+  void stopTimer() {
+    timer?.cancel();
+    timer = null;
+    setState(() => isRunning = false);
+  }
+
+  void resetTimer() {
+    stopTimer();
+    setState(() => remainingSeconds = workDuration);
+  }
+
+  String formatTime(int seconds) {
+    final m = (seconds ~/ 60).toString().padLeft(2, '0');
+    final s = (seconds % 60).toString().padLeft(2, '0');
+    return "$m:$s";
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF0F2027),
-              Color(0xFF203A43),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(height: 40),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Focus Mode",
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 18,
+                letterSpacing: 1.2,
+              ),
+            ),
+            const SizedBox(height: 40),
 
-                Column(
-                  children: [
-                    Container(
-                      width: 180,
-                      height: 180,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Color(0xFF4FD1C5),
-                          width: 4,
-                        ),
-                      ),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "25:00",
-                            style: TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFFECEFF1),
-                            ),
-                          ),
-                          SizedBox(height: 6),
-                          Text(
-                            "Focus",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF9AA5B1),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    const Text(
-                      "Focusly",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFFECEFF1),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      "Train your attention.\nOne session at a time.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Color(0xFF9AA5B1),
-                      ),
-                    ),
-                  ],
+            // Timer Circle
+            Container(
+              height: 260,
+              width: 260,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF22C55E), Color(0xFF38BDF8)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.4),
+                    blurRadius: 30,
+                    offset: const Offset(0, 20),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  formatTime(remainingSeconds),
+                  style: const TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
 
-                Column(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4FD1C5),
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const TimerScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "Start Focusing",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const TimerScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        "Skip for now",
-                        style: TextStyle(
-                          color: Color(0xFF9AA5B1),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
+            const SizedBox(height: 50),
+
+            // Controls
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _ControlButton(
+                  label: isRunning ? "Pause" : "Start",
+                  onTap: isRunning ? stopTimer : startTimer,
+                ),
+                const SizedBox(width: 20),
+                _ControlButton(
+                  label: "Reset",
+                  onTap: resetTimer,
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 }
 
+class _ControlButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const _ControlButton({
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: Colors.white.withOpacity(0.08),
+          border: Border.all(color: Colors.white12),
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            letterSpacing: 0.8,
+          ),
+        ),
+      ),
+    );
+  }
+}
 
