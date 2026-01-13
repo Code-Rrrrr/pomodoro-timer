@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -69,6 +70,9 @@ class _PomodoroHomeState extends State<PomodoroHome> {
     return "$m:$s";
   }
 
+  double get progress =>
+      1 - (remainingSeconds / workDuration);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,40 +90,55 @@ class _PomodoroHomeState extends State<PomodoroHome> {
             ),
             const SizedBox(height: 40),
 
-            // Timer Circle
-            Container(
-              height: 260,
-              width: 260,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF22C55E), Color(0xFF38BDF8)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
-                    blurRadius: 30,
-                    offset: const Offset(0, 20),
+            // Timer + Progress Ring
+            SizedBox(
+              height: 280,
+              width: 280,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  CustomPaint(
+                    size: const Size(280, 280),
+                    painter: ProgressRingPainter(progress),
+                  ),
+                  Container(
+                    height: 220,
+                    width: 220,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF22C55E),
+                          Color(0xFF38BDF8)
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.4),
+                          blurRadius: 30,
+                          offset: const Offset(0, 20),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        formatTime(remainingSeconds),
+                        style: const TextStyle(
+                          fontSize: 46,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
-              ),
-              child: Center(
-                child: Text(
-                  formatTime(remainingSeconds),
-                  style: const TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
               ),
             ),
 
             const SizedBox(height: 50),
 
-            // Controls
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -139,6 +158,44 @@ class _PomodoroHomeState extends State<PomodoroHome> {
       ),
     );
   }
+}
+
+class ProgressRingPainter extends CustomPainter {
+  final double progress;
+
+  ProgressRingPainter(this.progress);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = size.center(Offset.zero);
+    final radius = size.width / 2 - 8;
+
+    final backgroundPaint = Paint()
+      ..color = Colors.white12
+      ..strokeWidth = 6
+      ..style = PaintingStyle.stroke;
+
+    final progressPaint = Paint()
+      ..shader = const LinearGradient(
+        colors: [Color(0xFF22C55E), Color(0xFF38BDF8)],
+      ).createShader(Rect.fromCircle(center: center, radius: radius))
+      ..strokeWidth = 6
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawCircle(center, radius, backgroundPaint);
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -pi / 2,
+      2 * pi * progress,
+      false,
+      progressPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
 class _ControlButton extends StatelessWidget {
@@ -173,4 +230,3 @@ class _ControlButton extends StatelessWidget {
     );
   }
 }
-
