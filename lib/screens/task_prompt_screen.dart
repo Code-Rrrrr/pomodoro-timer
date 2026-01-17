@@ -43,3 +43,14 @@ class _TaskPromptScreenState extends State<TaskPromptScreen> {
     );
   }
 }
+
+class WorkingWidget extends StatelessWidget{
+  WorkingWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.orange
+    );
+  }
+}
