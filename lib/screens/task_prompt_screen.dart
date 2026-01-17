@@ -50,7 +50,8 @@ class WorkingWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.orange
+      color: Colors.orange,
+      child:  Text("Hello", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold))
     );
   }
 }
