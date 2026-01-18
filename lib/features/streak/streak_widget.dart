@@ -47,14 +47,6 @@ class _StreakWidgetState extends State<StreakWidget> {
           ),
         );
       },
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('🔥'),
-          const SizedBox(width: 6),
-          Text('${_streak!.currentStreak}'),
-        ],
-      ),
-    );
+
   }
 }
