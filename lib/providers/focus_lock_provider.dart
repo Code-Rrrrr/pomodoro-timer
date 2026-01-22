@@ -10,19 +10,3 @@ class FocusLockProvider extends ChangeNotifier {
     focusLockEnabled = prefs.getBool('focusLockEnabled') ?? false;
     notifyListeners();
   }
-
-  Future<void> toggleFocusLock(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    focusLockEnabled = value;
-    await prefs.setBool('focusLockEnabled', value);
-    notifyListeners();
-  }
-
-  void startSession() {
-    sessionActive = true;
-  }
-
-  void endSession() {
-    sessionActive = false;
-  }
-}
