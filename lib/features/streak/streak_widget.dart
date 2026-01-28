@@ -19,10 +19,6 @@ class _StreakWidgetState extends State<StreakWidget> {
     _load();
   }
 
-  Future<void> _load() async {
-    final streak = await _service.getStreak();
-    setState(() => _streak = streak);
-  }
 
   @override
   Widget build(BuildContext context) {
