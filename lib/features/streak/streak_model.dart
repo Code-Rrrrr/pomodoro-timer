@@ -9,13 +9,7 @@ class StreakModel {
     required this.lastCompletedDate,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'currentStreak': currentStreak,
-      'bestStreak': bestStreak,
-      'lastCompletedDate': lastCompletedDate?.toIso8601String(),
-    };
-  }
+
 
   factory StreakModel.fromMap(Map<String, dynamic> map) {
     return StreakModel(
