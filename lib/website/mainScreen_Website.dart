@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class MainScreen extends StatefulWidget{
-  MainScreen({super.key});
+class MainScreenWebsite extends StatefulWidget{
+  MainScreenWebsite({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<MainScreenWebsite> createState() => _MainScreenWebsiteState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenWebsiteState extends State<MainScreenWebsite> {
   @override
   Widget build(BuildContext context){
     return Container(
