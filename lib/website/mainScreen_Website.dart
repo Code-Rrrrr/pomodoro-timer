@@ -7,3 +7,14 @@ class MainScreenWebsite extends StatefulWidget{
   @override
   State<MainScreenWebsite> createState() => _MainScreenWebsiteState();
 }
+
+class _MainScreenWebsiteState extends State<MainScreenWebsite> {
+  @override
+  Widget build(BuildContext context){
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      height: double.infinity,
+    );
+  }
+}
